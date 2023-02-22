@@ -99,8 +99,59 @@ select {
 /* Custom properties setup */
 :root {
 	/* colours */
+	--clr-primary-200: hsl(239deg 57% 85%);
+	--clr-primary-400: hsl(238deg 40% 52%);
+
+	--clr-secondary-200: hsl(357deg 100% 86%);
+	--clr-secondary-400: hsl(358deg 79% 66%);
+
+	--clr-neutral-100: hsl(0deg 0% 100%);
+	--clr-neutral-200: hsl(228deg 33% 97%);
+	--clr-neutral-300: hsl(223deg 19% 93%);
+	--clr-neutral-400: hsl(211deg 10% 45%);
+	--clr-neutral-700: hsl(212deg 24% 26%);
 
 	/* font */
+	--ff-primary: 'Rubik', sans-serif;
+
+	--fw-regular: 400;
+	--fw-medium: 500;
+	--fw-bold: 700;
+
+	--fz-300: 1.3rem;
+	--fz-400: 1.6rem;
+	--fz-500: 2rem;
+
+	/* Spacers */
+	--spacer-rem-100: 1rem;
+	--spacer-rem-200: 1.6rem;
+	--spacer-rem-300: clamp(1.6rem, 1rem + 1vw, 2rem);
+	--spacer-rem-400: clamp(1.6rem, 1rem + 1.5vw, 2.4rem);
+	--spacer-rem-500: 2.4rem;
+	--spacer-rem-600: 2.8rem;
+	--spacer-rem-700: clamp(3.2rem, 1rem + 4vw, 6.4rem);
+
+	--spacer-em-200: 0.5em;
+	--spacer-em-400: 1.5em;
+	--spacer-em-500: 2em;
+}
+
+@media only screen and (min-width: 40em) {
+	:root {
+		--fz-500: 2.4rem;
+	}
+}
+
+/* Base */
+body {
+	font-family: var(--ff-primary);
+	font-size: var(--fz-400);
+	color: var(--clr-neutral-400);
+	background-color: var(--clr-neutral-200);
+}
+
+main {
+	padding-block: var(--spacer-rem-700);
 }
 
 /* Utility */
@@ -116,8 +167,8 @@ select {
 
 /* Layout */
 .container {
-	--max-width: 111rem;
-	--padding-inline: 2.4rem;
+	--max-width: 73rem;
+	--padding-inline: 1.6rem;
 	margin-inline: auto;
 	width: min(var(--max-width), 100% - 2 * var(--padding-inline));
 }
