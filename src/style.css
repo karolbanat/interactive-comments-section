@@ -129,7 +129,8 @@ select {
 	--spacer-rem-400: clamp(1.6rem, 1rem + 1.5vw, 2.4rem);
 	--spacer-rem-500: 2.4rem;
 	--spacer-rem-600: 2.8rem;
-	--spacer-rem-700: clamp(3.2rem, 1rem + 4vw, 6.4rem);
+	--spacer-rem-700: 3.2rem;
+	--spacer-rem-800: clamp(3.2rem, 1rem + 4vw, 6.4rem);
 
 	--spacer-em-200: 0.5em;
 	--spacer-em-300: 0.75em;
@@ -158,7 +159,8 @@ body {
 }
 
 main {
-	padding-block: var(--spacer-rem-700);
+	position: relative;
+	padding-block: var(--spacer-rem-800);
 }
 
 /* inner comments list */
@@ -210,6 +212,10 @@ button {
 
 .button:is(:hover, :focus) {
 	background-color: var(--button-bg-hover);
+}
+
+.button--thin {
+	padding-inline: var(--spacer-rem-200);
 }
 
 .button--primary {
@@ -397,6 +403,49 @@ button {
 	opacity: 1;
 }
 
+/* modals */
+.confirmation-modal {
+	position: absolute;
+	z-index: 9999;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+
+	display: grid;
+	gap: var(--spacer-rem-300);
+
+	width: calc(100% - 2 * var(--spacer-rem-200));
+	max-width: 40rem;
+	padding-block: var(--spacer-rem-500);
+	padding-inline: var(--spacer-rem-600);
+
+	background-color: var(--clr-neutral-100);
+	border-radius: var(--borr-200);
+}
+
+.confirmation-modal:not([data-open='true']) {
+	display: none;
+}
+
+.confirmation-modal__heading {
+	font-size: var(--fz-500);
+	font-weight: var(--fw-medium);
+	color: var(--clr-neutral-700);
+}
+
+.modal-dropshadow {
+	position: absolute;
+	inset: 0;
+	z-index: 9000;
+	background-color: hsl(0deg 0% 0% / 0.5);
+}
+
+@media only screen and (min-width: 40em) {
+	.confirmation-modal {
+		padding: var(--spacer-rem-700);
+	}
+}
+
 /* Utility */
 .visually-hidden {
 	clip: rect(0 0 0 0);
@@ -445,6 +494,12 @@ button {
 .comment-form-grid > [data-area='submit'] {
 	grid-area: submit;
 	justify-self: end;
+}
+
+.grid-columns-flow {
+	display: grid;
+	grid-auto-flow: column;
+	gap: var(--spacer-rem-200);
 }
 
 .flex-align-center {
