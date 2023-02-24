@@ -24,6 +24,7 @@ export function createCommentsList(comments: Comment[]): HTMLUListElement {
 export function createComment(comment: Comment, isCurrentUser: boolean = false): HTMLElement {
 	const commentElement: HTMLElement = document.createElement('div');
 	commentElement.classList.add('comment');
+	commentElement.dataset.id = comment.id.toString();
 	if (isCurrentUser) commentElement.setAttribute('data-current-user', 'true');
 
 	commentElement.appendChild(createCommentHeader(comment.user, comment.createdAt));

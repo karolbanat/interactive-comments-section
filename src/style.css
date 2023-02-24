@@ -389,6 +389,7 @@ button {
 	min-height: 9.6rem;
 	width: 100%;
 	resize: vertical;
+	caret-color: var(--clr-primary-400);
 
 	padding-inline: var(--spacer-em-400);
 	padding-block: var(--spacer-em-300);
@@ -396,6 +397,10 @@ button {
 	color: var(--clr-neutral-700);
 	border: 1px solid var(--clr-neutral-300);
 	border-radius: var(--borr-200);
+}
+
+.comment-form textarea:focus {
+	outline-color: var(--clr-primary-400);
 }
 
 .comment-form textarea::placeholder {
