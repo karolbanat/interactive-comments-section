@@ -70,7 +70,6 @@ function createUserName(username: string): HTMLElement {
 
 function createCreatedAt(createdAt: string): HTMLElement {
 	const createdElement: HTMLSpanElement = document.createElement('span');
-	createdElement.classList.add('comment__created-at');
 	createdElement.innerText = createdAt;
 	return createdElement;
 }
@@ -90,6 +89,7 @@ function craeteCommentText(content: string): HTMLElement {
 function createScore(score: number): HTMLElement {
 	const scoreContainer: HTMLElement = document.createElement('div');
 	scoreContainer.classList.add('score');
+	scoreContainer.classList.add('comment__score');
 
 	const scoreSpan: HTMLSpanElement = document.createElement('span');
 	scoreSpan.innerText = score.toString();
@@ -125,6 +125,7 @@ function createScoreButtonIcon(iconSource: string): HTMLImageElement {
 function createActions(isCurrentUser: boolean = false): HTMLElement {
 	const actionsContainer: HTMLElement = document.createElement('div');
 	actionsContainer.classList.add('flex-align-center');
+	actionsContainer.classList.add('comment__actions');
 
 	if (isCurrentUser) {
 		actionsContainer.appendChild(createActionButton('DELETE'));
