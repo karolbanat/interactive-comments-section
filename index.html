@@ -19,26 +19,26 @@
         <section>
             <h2 class="visually-hidden">Comments</h2>
             <div class="container">
+                <div class="comments-grid">
+                    <div id="comments-container"></div>
 
-                <div id="comments-container"></div>
+                    <form class="comment-form">
+                        <picture>
+                            <source srcset="./images/avatars/image-juliusomo.webp"
+                                    type="image/webp">
+                            <img src="./images/avatars/image-juliusomo.png"
+                                 alt=""
+                                 class="user-avatar">
+                        </picture>
 
-                <form class="comment-form">
-                    <picture>
-                        <source srcset="./images/avatars/image-juliusomo.webp"
-                                type="image/webp">
-                        <img src="./images/avatars/image-juliusomo.png"
-                             alt=""
-                             class="user-avatar">
-                    </picture>
+                        <textarea name="comment"
+                                  placeholder="Add a comment..."
+                                  id="comment"></textarea>
 
-                    <textarea name="comment"
-                              placeholder="Add a comment..."
-                              id="comment"></textarea>
-
-                    <button type="submit"
-                            class="button button--primary">Send</button>
-                </form>
-
+                        <button type="submit"
+                                class="button button--primary">Send</button>
+                    </form>
+                </div>
             </div>
         </section>
     </main>

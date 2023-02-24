@@ -12,7 +12,10 @@ export function createCommentsList(comments: Comment[]): HTMLUListElement {
 		li.appendChild(createComment(comment, isCurrentUser(comment.user.username)));
 		commentsList.appendChild(li);
 
-		if (comment.replies && comment.replies.length > 0) li.appendChild(createCommentsList(comment.replies));
+		if (comment.replies && comment.replies.length > 0) {
+			li.classList.add('comments-grid');
+			li.appendChild(createCommentsList(comment.replies));
+		}
 	}
 
 	return commentsList;
