@@ -187,12 +187,64 @@ ul > li > ul:before {
 }
 
 /* Components */
+/* buttons */
+.action-button {
+	font-weight: var(--fw-bold);
+	text-transform: capitalize;
+	color: var(--action-colour);
+
+	border: none;
+	background: none;
+	cursor: pointer;
+
+	transition: color 400ms ease-in-out;
+}
+
+.action-button::before {
+	content: '';
+	display: inline-block;
+
+	margin-inline-end: 0.8rem;
+	width: 1.4rem;
+	aspect-ratio: 1 / 1;
+
+	background-image: var(--action-icon);
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+.action-button:is(:hover, :focus) {
+	color: var(--action-colour-hover);
+}
+
+.action-button--reply {
+	--action-icon: url('../images/icon-reply.svg');
+}
+
+.action-button--edit {
+	--action-icon: url('../images/icon-edit.svg');
+}
+
+.action-button--reply,
+.action-button--edit {
+	--action-colour: var(--clr-primary-400);
+	--action-colour-hover: var(--clr-primary-200);
+}
+
+.action-button--delete {
+	--action-colour: var(--clr-secondary-400);
+	--action-colour-hover: var(--clr-secondary-200);
+	--action-icon: url('../images/icon-delete.svg');
+}
+
+/* image */
 .user-avatar {
 	width: var(--avatar-size, 4rem);
 	aspect-ratio: 1 / 1;
 	border-radius: var(--borr-circle);
 }
 
+/* comment */
 .comment {
 	--avatar-size: 3.2rem;
 	display: grid;
@@ -301,4 +353,10 @@ ul > li > ul:before {
 .comments-grid {
 	display: grid;
 	gap: var(--spacer-rem-300);
+}
+
+.flex-align-center {
+	display: flex;
+	align-items: center;
+	gap: var(--spacer-rem-400);
 }

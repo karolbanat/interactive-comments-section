@@ -141,6 +141,6 @@ function createActionButton(action: Action): HTMLButtonElement {
 	const button: HTMLButtonElement = document.createElement('button');
 	button.classList.add('action-button');
 	button.classList.add(`action-button--${action.toLowerCase()}`);
-	button.innerText = action;
+	button.innerText = action.toLowerCase();
 	return button;
 }
