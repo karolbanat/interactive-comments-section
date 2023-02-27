@@ -3,22 +3,36 @@ import { isCurrentUser } from '../main';
 
 type Action = 'EDIT' | 'DELETE' | 'REPLY';
 
-export function createCommentsList(comments: Comment[]): HTMLUListElement {
+export function createCommentsList(comments: Comment[], dataId: string = 'global'): HTMLUListElement {
 	const commentsList: HTMLUListElement = document.createElement('ul');
 	commentsList.classList.add('comments-grid');
+	commentsList.dataset.id = `comments-list-${dataId}`;
 
-	for (const comment of comments) {
-		const li: HTMLLIElement = document.createElement('li');
-		li.appendChild(createComment(comment, isCurrentUser(comment.user.username)));
-		commentsList.appendChild(li);
-
-		if (comment.replies && comment.replies.length > 0) {
-			li.classList.add('comments-grid');
-			li.appendChild(createCommentsList(comment.replies));
-		}
-	}
+	for (const comment of comments) commentsList.appendChild(createCommentsListElement(comment));
 
 	return commentsList;
+}
+
+function createCommentsListElement(comment: Comment): HTMLLIElement {
+	const li: HTMLLIElement = document.createElement('li');
+	li.appendChild(createComment(comment, isCurrentUser(comment.user.username)));
+
+	if (comment.replies && comment.replies.length > 0) {
+		li.classList.add('comments-grid');
+		li.appendChild(createCommentsList(comment.replies, comment.id));
+	}
+
+	return li;
+}
+
+export function appendComment(comment: Comment, listDataId: string = 'global'): HTMLElement {
+	const commentsList: HTMLUListElement = document.querySelector(
+		`[data-id="comments-list-${listDataId}"]`
+	) as HTMLUListElement;
+	const commentElement: HTMLElement = createCommentsListElement(comment);
+
+	if (commentsList) commentsList.appendChild(commentElement);
+	return commentElement;
 }
 
 export function createComment(comment: Comment, isCurrentUser: boolean = false): HTMLElement {
