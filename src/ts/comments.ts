@@ -28,7 +28,7 @@ export function createComment(comment: Comment, isCurrentUser: boolean = false):
 	if (isCurrentUser) commentElement.setAttribute('data-current-user', 'true');
 
 	commentElement.appendChild(createCommentHeader(comment.user, comment.createdAt));
-	commentElement.appendChild(craeteCommentText(comment.content));
+	commentElement.appendChild(craeteCommentContent(comment.content, comment.replyingTo));
 	commentElement.appendChild(createScore(comment.score));
 	commentElement.appendChild(createActions(isCurrentUser));
 	return commentElement;
@@ -75,15 +75,24 @@ function createCreatedAt(createdAt: string): HTMLElement {
 	return createdElement;
 }
 
-function craeteCommentText(content: string): HTMLElement {
+function craeteCommentContent(content: string, replyingTo: string | undefined): HTMLElement {
 	const commentContentContainer: HTMLElement = document.createElement('div');
 	commentContentContainer.classList.add('comment__content');
-
-	const commentText: HTMLParagraphElement = document.createElement('p');
-	commentText.innerText = content;
-
-	commentContentContainer.appendChild(commentText);
+	commentContentContainer.appendChild(createCommentText(content, replyingTo));
 	return commentContentContainer;
+}
+
+function createCommentText(content: string, replyingTo: string | undefined): HTMLParagraphElement {
+	const commentText: HTMLParagraphElement = document.createElement('p');
+
+	if (replyingTo) {
+		const replyTag: HTMLSpanElement = document.createElement('span');
+		replyTag.innerText = `@${replyingTo} `;
+		commentText.appendChild(replyTag);
+	}
+	commentText.appendChild(document.createTextNode(content));
+
+	return commentText;
 }
 
 /* comment score */

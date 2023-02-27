@@ -322,6 +322,11 @@ button {
 	grid-area: content;
 }
 
+.comment__content span {
+	font-weight: var(--fw-medium, 700);
+	color: var(--clr-primary-400);
+}
+
 .comment__actions {
 	grid-area: actions;
 	justify-self: end;
