@@ -1,5 +1,6 @@
 import { UserImage, User, Comment } from '../main';
-import { isCurrentUser, removeComment } from './app';
+import { isCurrentUser } from './app';
+import { openModal } from './modal';
 
 const commentsContainer: HTMLElement = document.querySelector('#comments-container')!;
 
@@ -181,19 +182,19 @@ function createActionButton(action: Action): HTMLButtonElement {
 function getActionHandler(action: Action): (e: Event) => void {
 	switch (action) {
 		case 'DELETE':
-			return deleteHanlder;
+			return deleteHandler;
 		default:
 			return () => {};
 	}
 }
 
-function deleteHanlder(e: Event): void {
+function deleteHandler(e: Event): void {
 	const button: HTMLButtonElement = e.target as HTMLButtonElement;
 	const comment: HTMLElement | null = button.closest('.comment');
 	if (!comment) return;
 
 	const id: string = comment.dataset.id!;
-	removeComment(id);
+	openModal(id);
 }
 
 /* removing */
