@@ -1,5 +1,5 @@
 import { UserImage, User, Comment } from '../main';
-import { isCurrentUser } from './app';
+import { isCurrentUser, removeComment } from './app';
 
 type Action = 'EDIT' | 'DELETE' | 'REPLY';
 
@@ -166,5 +166,33 @@ function createActionButton(action: Action): HTMLButtonElement {
 	button.classList.add('action-button');
 	button.classList.add(`action-button--${action.toLowerCase()}`);
 	button.innerText = action.toLowerCase();
+
+	button.addEventListener('click', getActionHandler(action));
 	return button;
+}
+
+function getActionHandler(action: Action): (e: Event) => void {
+	switch (action) {
+		case 'DELETE':
+			return deleteHanlder;
+		default:
+			return () => {};
+	}
+}
+
+function deleteHanlder(e: Event): void {
+	const button: HTMLButtonElement = e.target as HTMLButtonElement;
+	const comment: HTMLElement | null = button.closest('.comment');
+	if (!comment) return;
+
+	const id: string = comment.dataset.id!;
+	removeComment(id);
+}
+
+/* removing */
+export function removeCommentFromDOM(id: string): void {
+	const commentToRemove: HTMLElement | null = document.querySelector(`[data-id="${id}"]`);
+	if (!commentToRemove) return;
+
+	commentToRemove.closest('li')!.remove();
 }
