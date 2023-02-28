@@ -1,5 +1,5 @@
 import { UserImage, User, Comment } from '../main';
-import { isCurrentUser } from '../main';
+import { isCurrentUser } from './app';
 
 type Action = 'EDIT' | 'DELETE' | 'REPLY';
 
