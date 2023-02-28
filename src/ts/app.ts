@@ -1,6 +1,7 @@
 import { User, Comment } from '../main';
 import { appendComment, removeCommentFromDOM } from './comments';
-import { loadData, populateComments } from './dataLoading';
+import { loadData, saveData } from './dataLoading';
+import { populateComments } from './comments';
 
 let comments: Comment[] = [];
 let currentUser: User;
@@ -25,6 +26,7 @@ export function isCurrentUser(username: string): boolean {
 export function addComment(comment: Comment, origin: Comment[] = comments): void {
 	origin.push(comment);
 	appendComment(comment);
+	saveData({ currentUser, comments });
 }
 
 export function removeComment(id: string): Comment | null {
@@ -39,6 +41,7 @@ export function removeComment(id: string): Comment | null {
 
 	commentOrigin = commentOrigin.splice(idx, 1);
 	removeCommentFromDOM(id);
+	saveData({ currentUser, comments });
 
 	return commentToRemove;
 }

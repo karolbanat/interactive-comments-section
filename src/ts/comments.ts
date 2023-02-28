@@ -1,7 +1,14 @@
 import { UserImage, User, Comment } from '../main';
 import { isCurrentUser, removeComment } from './app';
 
+const commentsContainer: HTMLElement = document.querySelector('#comments-container')!;
+
 type Action = 'EDIT' | 'DELETE' | 'REPLY';
+
+export function populateComments(comments: Comment[]): void {
+	const commentsList: HTMLUListElement = createCommentsList(comments);
+	commentsContainer.appendChild(commentsList);
+}
 
 export function createCommentsList(comments: Comment[], dataId: string = 'global'): HTMLUListElement {
 	const commentsList: HTMLUListElement = document.createElement('ul');
