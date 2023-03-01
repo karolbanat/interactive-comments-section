@@ -46,6 +46,27 @@ export function removeComment(id: string): Comment | null {
 	return commentToRemove;
 }
 
+export function updateComment(id: string, data: { content: string; replyingTo: string | undefined }): Comment | null {
+	const comment: Comment | null = findComment(id);
+	if (!comment) return null;
+
+	comment.content = data.content;
+	if (data.replyingTo) comment.replyingTo = data.replyingTo;
+	else delete comment.replyingTo;
+
+	saveData({ currentUser, comments });
+
+	return { ...comment };
+}
+
+export function getFormattedCommentContent(id: string): string {
+	const comment: Comment | null = findComment(id);
+	if (!comment) return '';
+
+	if (comment.replyingTo) return `@${comment.replyingTo} ${comment.content}`;
+	return comment.content;
+}
+
 function getCommentIdx(id: string, origin: Comment[] = comments): number {
 	for (let i = 0; i < origin.length; i++) {
 		if (origin[i].id.toString() === id) return i;

@@ -1,5 +1,6 @@
 import { UserImage, User, Comment } from '../main';
-import { isCurrentUser, removeComment } from './app';
+import { getFormattedCommentContent, isCurrentUser, removeComment } from './app';
+import { editFormHandler } from './forms';
 import { openModal } from './modal';
 
 const commentsContainer: HTMLElement = document.querySelector('#comments-container')!;
@@ -183,6 +184,8 @@ function getActionHandler(action: Action): (e: Event) => void {
 	switch (action) {
 		case 'DELETE':
 			return deleteHandler;
+		case 'EDIT':
+			return editHandler;
 		default:
 			return () => {};
 	}
@@ -195,6 +198,58 @@ function deleteHandler(e: Event): void {
 
 	const id: string = comment.dataset.id!;
 	openModal(() => removeComment(id));
+}
+
+function editHandler(e: Event): void {
+	const button: HTMLButtonElement = e.target as HTMLButtonElement;
+	const comment: HTMLElement | null = button.closest('.comment');
+	if (!comment) return;
+
+	const id: string = comment.dataset.id!;
+	const contentContainer: HTMLElement | null = comment.querySelector('.comment__content');
+	if (!contentContainer) return;
+
+	clearElement(contentContainer);
+	contentContainer.appendChild(createEditForm(id));
+}
+
+export function insertCommentContent(comment: Comment): void {
+	const commentElement: HTMLElement | null = document.querySelector(`[data-id="${comment.id}"]`);
+	if (!commentElement) return;
+
+	const contentContainer: HTMLElement | null = commentElement.querySelector('.comment__content');
+	if (!contentContainer) return;
+
+	clearElement(contentContainer);
+	contentContainer.appendChild(craeteCommentContent(comment.content, comment.replyingTo));
+}
+
+function clearElement(element: HTMLElement): void {
+	element.innerHTML = '';
+}
+
+/* forms */
+function createEditForm(id: string): HTMLFormElement {
+	const editForm: HTMLFormElement = document.createElement('form');
+	editForm.classList.add('comment-form');
+	editForm.classList.add('comment-form--edit');
+	editForm.dataset.commentId = id;
+
+	const textarea: HTMLTextAreaElement = document.createElement('textarea');
+	textarea.setAttribute('aria-label', 'Edit comment');
+	textarea.name = 'comment-edit';
+	textarea.value = getFormattedCommentContent(id);
+
+	const submitBtn: HTMLButtonElement = document.createElement('button');
+	submitBtn.classList.add('button');
+	submitBtn.classList.add('button--primary');
+	submitBtn.type = 'submit';
+	submitBtn.addEventListener('click', editFormHandler);
+	submitBtn.innerText = 'Update';
+
+	editForm.appendChild(textarea);
+	editForm.appendChild(submitBtn);
+	return editForm;
 }
 
 /* removing */

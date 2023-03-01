@@ -390,6 +390,10 @@ button {
 	border-radius: var(--borr-200);
 }
 
+.comment-form--edit {
+	padding: 0;
+}
+
 .comment-form textarea {
 	min-height: 9.6rem;
 	width: 100%;

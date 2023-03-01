@@ -1,5 +1,3 @@
-import { removeComment } from './app';
-
 const confirmationModal: HTMLElement = document.querySelector('#delete-confirmation-modal')!;
 const cancelButton: HTMLButtonElement = confirmationModal.querySelector('#cancel-button')!;
 const confirmButton: HTMLButtonElement = confirmationModal.querySelector('#confirm-delete-button')!;
@@ -35,5 +33,3 @@ confirmButton.addEventListener('click', () => {
 	confirmationCallback();
 	confirmationCallback = () => {};
 });
-
-export {};
