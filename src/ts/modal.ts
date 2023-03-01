@@ -4,13 +4,13 @@ const confirmationModal: HTMLElement = document.querySelector('#delete-confirmat
 const cancelButton: HTMLButtonElement = confirmationModal.querySelector('#cancel-button')!;
 const confirmButton: HTMLButtonElement = confirmationModal.querySelector('#confirm-delete-button')!;
 
-let idToDelete: string = '';
+let confirmationCallback: () => void;
 
-export function openModal(id: string): void {
+export function openModal(callback: () => void): void {
 	confirmationModal.dataset.open = 'true';
 	insertDropshadow();
 	cancelButton.focus();
-	idToDelete = id;
+	confirmationCallback = callback;
 }
 
 export function closeModal(): void {
@@ -32,8 +32,8 @@ function removeDropshadow(): void {
 cancelButton.addEventListener('click', closeModal);
 confirmButton.addEventListener('click', () => {
 	closeModal();
-	removeComment(idToDelete);
-	idToDelete = '';
+	confirmationCallback();
+	confirmationCallback = () => {};
 });
 
 export {};

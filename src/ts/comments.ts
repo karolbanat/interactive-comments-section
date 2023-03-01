@@ -1,5 +1,5 @@
 import { UserImage, User, Comment } from '../main';
-import { isCurrentUser } from './app';
+import { isCurrentUser, removeComment } from './app';
 import { openModal } from './modal';
 
 const commentsContainer: HTMLElement = document.querySelector('#comments-container')!;
@@ -194,7 +194,7 @@ function deleteHandler(e: Event): void {
 	if (!comment) return;
 
 	const id: string = comment.dataset.id!;
-	openModal(id);
+	openModal(() => removeComment(id));
 }
 
 /* removing */
