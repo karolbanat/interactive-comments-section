@@ -1,7 +1,6 @@
 import { Comment } from '../main';
 import { v4 as uuidv4 } from 'uuid';
 import { addComment, getCurrentUser, updateComment } from './app';
-import { insertCommentContent } from './comments';
 
 const commentForm: HTMLFormElement = document.querySelector('#global-comment-form')!;
 const commentInput: HTMLTextAreaElement = commentForm.querySelector('textarea#comment')!;
@@ -41,10 +40,7 @@ export function editFormHandler(e: Event): void {
 	const commentId: string | undefined = parentForm.dataset.commentId;
 	if (!commentId) return;
 
-	const updatedComment: Comment | null = updateComment(commentId, processedComment);
-	if (!updatedComment) return;
-
-	insertCommentContent(updatedComment);
+	updateComment(commentId, processedComment);
 }
 
 function processComment(commentContent: string): { content: string; replyingTo: string | undefined } {

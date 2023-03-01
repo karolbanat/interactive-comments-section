@@ -233,6 +233,7 @@ function createEditForm(id: string): HTMLFormElement {
 	const editForm: HTMLFormElement = document.createElement('form');
 	editForm.classList.add('comment-form');
 	editForm.classList.add('comment-form--edit');
+	editForm.classList.add('edit-form-grid');
 	editForm.dataset.commentId = id;
 
 	const textarea: HTMLTextAreaElement = document.createElement('textarea');

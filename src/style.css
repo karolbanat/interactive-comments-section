@@ -510,6 +510,12 @@ button {
 	justify-self: end;
 }
 
+.edit-form-grid {
+	display: grid;
+	gap: var(--spacer-rem-200);
+	justify-items: end;
+}
+
 .grid-columns-flow {
 	display: grid;
 	grid-auto-flow: column;

@@ -1,5 +1,5 @@
 import { User, Comment } from '../main';
-import { appendComment, removeCommentFromDOM } from './comments';
+import { appendComment, insertCommentContent, removeCommentFromDOM } from './comments';
 import { loadData, saveData } from './dataLoading';
 import { populateComments } from './comments';
 
@@ -46,17 +46,16 @@ export function removeComment(id: string): Comment | null {
 	return commentToRemove;
 }
 
-export function updateComment(id: string, data: { content: string; replyingTo: string | undefined }): Comment | null {
+export function updateComment(id: string, data: { content: string; replyingTo: string | undefined }): void {
 	const comment: Comment | null = findComment(id);
-	if (!comment) return null;
+	if (!comment) return;
 
 	comment.content = data.content;
 	if (data.replyingTo) comment.replyingTo = data.replyingTo;
 	else delete comment.replyingTo;
 
+	insertCommentContent(comment);
 	saveData({ currentUser, comments });
-
-	return { ...comment };
 }
 
 export function getFormattedCommentContent(id: string): string {
