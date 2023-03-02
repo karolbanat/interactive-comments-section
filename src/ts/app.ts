@@ -78,7 +78,7 @@ function findCommentOrigin(id: string): Comment[] | null {
 	for (const comment of comments) {
 		if (comment.id.toString() === id) return comments;
 
-		if (comment.replies.length > 0) {
+		if (comment.replies && comment.replies.length > 0) {
 			for (const reply of comment.replies) {
 				if (reply.id.toString() === id) return comment.replies;
 			}
@@ -92,7 +92,7 @@ function findComment(id: string): Comment | null {
 	for (const comment of comments) {
 		if (comment.id.toString() === id) return comment;
 
-		if (comment.replies.length > 0) {
+		if (comment.replies && comment.replies.length > 0) {
 			for (const reply of comment.replies) {
 				if (reply.id.toString() === id) return reply;
 			}
