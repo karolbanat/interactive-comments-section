@@ -1,4 +1,4 @@
-import { User, Comment } from '../main';
+import { User, Comment, CommentData } from '../main';
 import { appendComment, insertCommentContent, removeCommentFromDOM } from './comments';
 import { loadData, saveData } from './dataLoading';
 import { populateComments } from './comments';
@@ -46,7 +46,7 @@ export function removeComment(id: string): Comment | null {
 	return commentToRemove;
 }
 
-export function updateComment(id: string, data: { content: string; replyingTo: string | undefined }): void {
+export function updateComment(id: string, data: CommentData): void {
 	const comment: Comment | null = findComment(id);
 	if (!comment) return;
 

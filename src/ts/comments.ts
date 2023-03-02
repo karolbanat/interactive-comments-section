@@ -51,7 +51,7 @@ export function createComment(comment: Comment, isCurrentUser: boolean = false):
 	if (isCurrentUser) commentElement.setAttribute('data-current-user', 'true');
 
 	commentElement.appendChild(createCommentHeader(comment.user, comment.createdAt));
-	commentElement.appendChild(craeteCommentContent(comment.content, comment.replyingTo));
+	commentElement.appendChild(createCommentContent(comment.content, comment.replyingTo));
 	commentElement.appendChild(createScore(comment.score));
 	commentElement.appendChild(createActions(isCurrentUser));
 	return commentElement;
@@ -98,7 +98,7 @@ function createCreatedAt(createdAt: string): HTMLElement {
 	return createdElement;
 }
 
-function craeteCommentContent(content: string, replyingTo: string | undefined): HTMLElement {
+function createCommentContent(content: string, replyingTo: string | undefined): HTMLElement {
 	const commentContentContainer: HTMLElement = document.createElement('div');
 	commentContentContainer.classList.add('comment__content');
 	commentContentContainer.appendChild(createCommentText(content, replyingTo));
@@ -221,7 +221,7 @@ export function insertCommentContent(comment: Comment): void {
 	if (!contentContainer) return;
 
 	clearElement(contentContainer);
-	contentContainer.appendChild(craeteCommentContent(comment.content, comment.replyingTo));
+	contentContainer.appendChild(createCommentContent(comment.content, comment.replyingTo));
 }
 
 function clearElement(element: HTMLElement): void {

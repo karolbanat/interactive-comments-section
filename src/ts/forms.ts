@@ -1,4 +1,4 @@
-import { Comment } from '../main';
+import { Comment, CommentData } from '../main';
 import { v4 as uuidv4 } from 'uuid';
 import { addComment, getCurrentUser, updateComment } from './app';
 
@@ -10,7 +10,7 @@ export function handleCommentAdd(e: Event): void {
 	e.preventDefault();
 
 	const commentContent: string = commentInput.value;
-	const { content, replyingTo } = processComment(commentContent);
+	const { content, replyingTo }: CommentData = processComment(commentContent);
 
 	if (isBlank(content)) return;
 	const newComment: Comment = {
@@ -33,7 +33,7 @@ export function editFormHandler(e: Event): void {
 	const parentForm: HTMLFormElement = button.closest('form')!;
 	const commentField: HTMLTextAreaElement = parentForm.querySelector('textarea')!;
 
-	const processedComment = processComment(commentField.value);
+	const processedComment: CommentData = processComment(commentField.value);
 
 	if (isBlank(processedComment.content)) return;
 
@@ -43,9 +43,9 @@ export function editFormHandler(e: Event): void {
 	updateComment(commentId, processedComment);
 }
 
-function processComment(commentContent: string): { content: string; replyingTo: string | undefined } {
-	const replyTag = (commentContent.match(/^@\S+/) || [undefined])[0];
-	const content = commentContent.replace(/^@\S+/, '').trim();
+function processComment(commentContent: string): CommentData {
+	const replyTag: string | undefined = (commentContent.match(/^@\S+/) || [undefined])[0];
+	const content: string = commentContent.replace(/^@\S+/, '').trim();
 
 	return {
 		content,

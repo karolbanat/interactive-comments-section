@@ -29,4 +29,9 @@ export interface AppData {
 	currentUser: User;
 }
 
+export interface CommentData {
+	content: string;
+	replyingTo?: string;
+}
+
 commentSubmit.addEventListener('click', handleCommentAdd);
