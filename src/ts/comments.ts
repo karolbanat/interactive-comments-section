@@ -1,5 +1,5 @@
 import { UserImage, User, Comment } from '../main';
-import { getFormattedCommentContent, isCurrentUser, removeComment } from './app';
+import { getCurrentUser, getFormattedCommentContent, getFormattedReplyTag, isCurrentUser, removeComment } from './app';
 import { editFormHandler } from './forms';
 import { openModal } from './modal';
 
@@ -24,6 +24,7 @@ export function createCommentsList(comments: Comment[], dataId: string = 'global
 
 function createCommentsListElement(comment: Comment): HTMLLIElement {
 	const li: HTMLLIElement = document.createElement('li');
+	li.classList.add('comments-grid');
 	li.appendChild(createComment(comment, isCurrentUser(comment.user.username)));
 
 	if (comment.replies && comment.replies.length > 0) {
@@ -186,6 +187,8 @@ function getActionHandler(action: Action): (e: Event) => void {
 			return deleteHandler;
 		case 'EDIT':
 			return editHandler;
+		case 'REPLY':
+			return replyHandler;
 		default:
 			return () => {};
 	}
@@ -213,6 +216,17 @@ function editHandler(e: Event): void {
 	contentContainer.appendChild(createEditForm(id));
 }
 
+function replyHandler(e: Event): void {
+	const button: HTMLButtonElement = e.target as HTMLButtonElement;
+	const comment: HTMLElement | null = button.closest('.comment');
+	if (!comment) return;
+
+	const id: string = comment.dataset.id!;
+	const replyForm: HTMLFormElement = createReplyForm(id);
+
+	comment.after(replyForm);
+}
+
 export function insertCommentContent(comment: Comment): void {
 	const commentElement: HTMLElement | null = document.querySelector(`[data-id="${comment.id}"]`);
 	if (!commentElement) return;
@@ -236,21 +250,52 @@ function createEditForm(id: string): HTMLFormElement {
 	editForm.classList.add('edit-form-grid');
 	editForm.dataset.commentId = id;
 
-	const textarea: HTMLTextAreaElement = document.createElement('textarea');
-	textarea.setAttribute('aria-label', 'Edit comment');
-	textarea.name = 'comment-edit';
-	textarea.value = getFormattedCommentContent(id);
+	const textarea: HTMLTextAreaElement = createTextarea(getFormattedCommentContent(id), 'Edit comment', 'comment-edit');
 
-	const submitBtn: HTMLButtonElement = document.createElement('button');
-	submitBtn.classList.add('button');
-	submitBtn.classList.add('button--primary');
-	submitBtn.type = 'submit';
+	const submitBtn: HTMLButtonElement = createSubmitButton('Update');
 	submitBtn.addEventListener('click', editFormHandler);
-	submitBtn.innerText = 'Update';
 
 	editForm.appendChild(textarea);
 	editForm.appendChild(submitBtn);
 	return editForm;
+}
+
+function createReplyForm(id: string): HTMLFormElement {
+	const replyForm: HTMLFormElement = document.createElement('form');
+	replyForm.classList.add('comment-form');
+	replyForm.classList.add('comment-form-grid');
+	replyForm.dataset.commentId = id;
+
+	const userAvatar: HTMLPictureElement = createUserAvatar(getCurrentUser().image);
+	userAvatar.dataset.area = 'avatar';
+
+	const textarea: HTMLTextAreaElement = createTextarea(getFormattedReplyTag(id), 'Reply comment', 'comment-reply');
+	textarea.dataset.area = 'input';
+
+	const submitBtn: HTMLButtonElement = createSubmitButton('Reply');
+	submitBtn.dataset.area = 'submit';
+
+	replyForm.appendChild(userAvatar);
+	replyForm.appendChild(textarea);
+	replyForm.appendChild(submitBtn);
+	return replyForm;
+}
+
+function createTextarea(value: string = '', label: string = 'Comment', name: string = 'comment'): HTMLTextAreaElement {
+	const textarea: HTMLTextAreaElement = document.createElement('textarea');
+	textarea.setAttribute('aria-label', label);
+	textarea.name = name;
+	textarea.value = value;
+	return textarea;
+}
+
+function createSubmitButton(label: string = 'Send'): HTMLButtonElement {
+	const submitBtn: HTMLButtonElement = document.createElement('button');
+	submitBtn.classList.add('button');
+	submitBtn.classList.add('button--primary');
+	submitBtn.type = 'submit';
+	submitBtn.innerText = label;
+	return submitBtn;
 }
 
 /* removing */

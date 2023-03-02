@@ -66,6 +66,13 @@ export function getFormattedCommentContent(id: string): string {
 	return comment.content;
 }
 
+export function getFormattedReplyTag(id: string): string {
+	const comment: Comment | null = findComment(id);
+	if (!comment) return '';
+
+	return `@${comment.user.username}`;
+}
+
 function getCommentIdx(id: string, origin: Comment[] = comments): number {
 	for (let i = 0; i < origin.length; i++) {
 		if (origin[i].id.toString() === id) return i;
