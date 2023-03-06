@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { User, Comment, CommentData } from '../main';
 import { appendComment, insertCommentContent, removeCommentFromDOM } from './comments';
 import { loadData, saveData } from './dataLoading';
@@ -18,31 +19,49 @@ export function loadComments() {
 export function getCurrentUser(): User {
 	return { ...currentUser };
 }
+
 export function isCurrentUser(username: string): boolean {
 	return username === currentUser.username;
 }
 
 /* comments */
-export function addComment(comment: Comment, origin: Comment[] = comments): void {
-	origin.push(comment);
-	appendComment(comment);
+export function addComment(data: CommentData): Comment {
+	const newComment: Comment = createComment(data);
+	comments = [...comments, newComment];
+
 	saveData({ currentUser, comments });
+	return newComment;
+}
+
+export function addReply(data: CommentData, replyId: string): Comment | null {
+	const commentReplyingTo: Comment | null = findComment(replyId);
+	if (!commentReplyingTo) return null;
+
+	const newComment: Comment = createComment(data);
+
+	if (commentReplyingTo.replies) {
+		commentReplyingTo.replies = [...commentReplyingTo.replies, newComment];
+		return newComment;
+	}
+
+	const parentComment: Comment | null = findParentComment(replyId);
+	if (!parentComment) return null;
+
+	parentComment.replies = [...(parentComment.replies || []), newComment];
+	return newComment;
 }
 
 export function removeComment(id: string): Comment | null {
 	const commentToRemove: Comment | null = findComment(id);
 	if (!commentToRemove) return null;
 
-	let commentOrigin: Comment[] | null = findCommentOrigin(id);
-	if (!commentOrigin) return null;
+	/* remove comment if in comments */
+	comments = comments.filter(comment => comment.id !== id);
 
-	const idx: number = getCommentIdx(id, commentOrigin);
-	if (idx === -1) return null;
+	/* remove comment if in replies */
+	comments.forEach(comment => (comment.replies = comment.replies?.filter(reply => reply.id !== id)));
 
-	commentOrigin = commentOrigin.splice(idx, 1);
-	removeCommentFromDOM(id);
 	saveData({ currentUser, comments });
-
 	return commentToRemove;
 }
 
@@ -54,7 +73,6 @@ export function updateComment(id: string, data: CommentData): void {
 	if (data.replyingTo) comment.replyingTo = data.replyingTo;
 	else delete comment.replyingTo;
 
-	insertCommentContent(comment);
 	saveData({ currentUser, comments });
 }
 
@@ -73,23 +91,26 @@ export function getFormattedReplyTag(id: string): string {
 	return `@${comment.user.username}`;
 }
 
-function getCommentIdx(id: string, origin: Comment[] = comments): number {
-	for (let i = 0; i < origin.length; i++) {
-		if (origin[i].id.toString() === id) return i;
-	}
+function createComment(data: CommentData): Comment {
+	const comment: Comment = {
+		id: uuidv4(),
+		content: data.content,
+		createdAt: 'few seconds ago',
+		score: 0,
+		user: currentUser,
+	};
 
-	return -1;
+	if (data.replyingTo) comment.replyingTo = data.replyingTo;
+	else comment.replies = [];
+
+	return comment;
 }
 
-function findCommentOrigin(id: string): Comment[] | null {
+function findParentComment(id: string): Comment | null {
 	for (const comment of comments) {
-		if (comment.id.toString() === id) return comments;
+		if (comment.id.toString() === id) return null;
 
-		if (comment.replies && comment.replies.length > 0) {
-			for (const reply of comment.replies) {
-				if (reply.id.toString() === id) return comment.replies;
-			}
-		}
+		if (comment.replies?.filter(reply => reply.id.toString() === id)) return comment;
 	}
 
 	return null;
@@ -99,7 +120,7 @@ function findComment(id: string): Comment | null {
 	for (const comment of comments) {
 		if (comment.id.toString() === id) return comment;
 
-		if (comment.replies && comment.replies.length > 0) {
+		if (comment.replies) {
 			for (const reply of comment.replies) {
 				if (reply.id.toString() === id) return reply;
 			}

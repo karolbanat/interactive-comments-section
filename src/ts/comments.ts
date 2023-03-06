@@ -224,7 +224,7 @@ function replyHandler(e: Event): void {
 	const id: string = comment.dataset.id!;
 	const replyForm: HTMLFormElement = createReplyForm(id);
 
-	comment.after(replyForm);
+	comment.parentNode?.insertBefore(replyForm, comment.nextSibling);
 }
 
 export function insertCommentContent(comment: Comment): void {
