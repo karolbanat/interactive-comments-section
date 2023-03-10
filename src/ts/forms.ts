@@ -17,6 +17,8 @@ export function handleCommentAdd(e: Event): void {
 
 	const comment: Comment = addComment(processedComment);
 	appendComment(comment);
+
+	commentField.value = '';
 }
 
 export function editFormHandler(e: Event): void {
