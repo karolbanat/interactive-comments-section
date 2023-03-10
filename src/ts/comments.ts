@@ -327,5 +327,11 @@ export function appendReply(reply: Comment, replyId: string): void {
 
 export function removeCommentFromDOM(id: string): void {
 	const commentToRemove: HTMLElement | null = document.querySelector(`[data-id="${id}"]`);
+	const parentList: HTMLUListElement | null | undefined = commentToRemove?.closest('ul');
 	commentToRemove?.closest('li')?.remove();
+
+	/* remove list if empty */
+	if (parentList && parentList.children.length === 0) {
+		parentList.remove();
+	}
 }
