@@ -40,13 +40,14 @@ export function addReply(data: CommentData, replyId: string): Comment | null {
 
 	if (commentReplyingTo.replies) {
 		commentReplyingTo.replies = [...commentReplyingTo.replies, newComment];
-		return newComment;
+	} else {
+		const parentComment: Comment | null = findParentComment(replyId);
+		if (!parentComment) return null;
+
+		parentComment.replies = [...(parentComment.replies || []), newComment];
 	}
 
-	const parentComment: Comment | null = findParentComment(replyId);
-	if (!parentComment) return null;
-
-	parentComment.replies = [...(parentComment.replies || []), newComment];
+	saveData({ currentUser, comments });
 	return newComment;
 }
 
@@ -110,7 +111,8 @@ function findParentComment(id: string): Comment | null {
 	for (const comment of comments) {
 		if (comment.id.toString() === id) return null;
 
-		if (comment.replies?.filter(reply => reply.id.toString() === id)) return comment;
+		const replies: Comment[] | undefined = comment.replies?.filter(reply => reply.id.toString() === id);
+		if (replies && replies.length > 0) return comment;
 	}
 
 	return null;

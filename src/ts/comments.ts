@@ -1,6 +1,6 @@
 import { UserImage, User, Comment } from '../main';
 import { getCurrentUser, getFormattedCommentContent, getFormattedReplyTag, isCurrentUser, removeComment } from './app';
-import { editFormHandler } from './forms';
+import { editFormHandler, replyFormHandler } from './forms';
 import { openModal } from './modal';
 
 const commentsContainer: HTMLElement = document.querySelector('#comments-container')!;
@@ -258,7 +258,7 @@ function createReplyForm(id: string): HTMLFormElement {
 	const replyForm: HTMLFormElement = document.createElement('form');
 	replyForm.classList.add('comment-form');
 	replyForm.classList.add('comment-form-grid');
-	replyForm.dataset.commentId = id;
+	replyForm.dataset.replyId = id;
 
 	const userAvatar: HTMLPictureElement = createUserAvatar(getCurrentUser().image);
 	userAvatar.dataset.area = 'avatar';
@@ -268,6 +268,7 @@ function createReplyForm(id: string): HTMLFormElement {
 
 	const submitBtn: HTMLButtonElement = createSubmitButton('Reply');
 	submitBtn.dataset.area = 'submit';
+	submitBtn.addEventListener('click', replyFormHandler);
 
 	replyForm.appendChild(userAvatar);
 	replyForm.appendChild(textarea);
@@ -307,6 +308,21 @@ export function updateCommentContent(comment: Comment): void {
 
 	clearElement(contentContainer);
 	contentContainer.appendChild(createCommentContent(comment.content, comment.replyingTo));
+}
+
+export function appendReply(reply: Comment, replyId: string): void {
+	const replyingToComment: HTMLElement | null = document.querySelector(`[data-id="${replyId}"]`);
+	if (!replyingToComment) return;
+
+	if (replyingToComment.closest('ul')?.id && replyingToComment.closest('ul')?.id === 'comments-list') {
+		if (replyingToComment.nextSibling?.nodeName === 'UL') {
+			replyingToComment.nextSibling.appendChild(createCommentsListElement(reply, true));
+		} else {
+			replyingToComment.parentNode?.insertBefore(createCommentsList([reply], true), replyingToComment.nextSibling);
+		}
+	} else {
+		replyingToComment.closest('ul')?.appendChild(createCommentsListElement(reply, true));
+	}
 }
 
 export function removeCommentFromDOM(id: string): void {
