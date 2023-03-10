@@ -375,6 +375,12 @@ button {
 	border-radius: var(--borr-300);
 }
 
+.score__vote-button:is(:hover, :focus-visible) {
+	/* generated with: https://angel-rs.github.io/css-color-filter-generator/ */
+	filter: brightness(0) saturate(100%) invert(34%) sepia(8%) saturate(4696%) hue-rotate(201deg) brightness(100%)
+		contrast(92%);
+}
+
 @media only screen and (min-width: 40em) {
 	.score {
 		flex-direction: column;
