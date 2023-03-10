@@ -4,8 +4,8 @@ This is a solution to the [Interactive comments section challenge on Frontend Me
 
 ## Links
 
-- Solution URL: [Frontend Mentor Solution Page](https://your-solution-url.com)
-- Live Site URL: [GitHub Pages Site](https://your-live-site-url.com)
+- Solution URL: [Frontend Mentor Solution Page](https://www.frontendmentor.io/solutions/interactive-comments-section-ydHsnf7Y3V)
+- Live Site URL: [GitHub Pages Site](https://karolbanat.github.io/interactive-comments-section/)
 
 ## Built with
 
