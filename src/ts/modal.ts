@@ -19,7 +19,7 @@ export function closeModal(): void {
 function insertDropshadow(): void {
 	const dropshadow: HTMLElement = document.createElement('div');
 	dropshadow.classList.add('modal-dropshadow');
-	document.body.appendChild(dropshadow);
+	confirmationModal.parentNode?.insertBefore(dropshadow, confirmationModal.nextSibling);
 }
 
 function removeDropshadow(): void {
