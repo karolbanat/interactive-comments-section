@@ -64,15 +64,16 @@ export function removeComment(id: string): Comment | null {
 	return commentToRemove;
 }
 
-export function updateComment(id: string, data: CommentData): void {
+export function updateComment(id: string, data: CommentData): Comment | null {
 	const comment: Comment | null = findComment(id);
-	if (!comment) return;
+	if (!comment) return null;
 
 	comment.content = data.content;
 	if (data.replyingTo) comment.replyingTo = data.replyingTo;
 	else delete comment.replyingTo;
 
 	saveData({ currentUser, comments });
+	return comment;
 }
 
 export function getFormattedCommentContent(id: string): string {

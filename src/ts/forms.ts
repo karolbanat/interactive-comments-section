@@ -1,6 +1,6 @@
 import { CommentData, Comment } from '../main';
 import { addComment, updateComment } from './app';
-import { appendComment } from './comments';
+import { appendComment, updateCommentContent } from './comments';
 
 const commentForm: HTMLFormElement = document.querySelector('#global-comment-form')!;
 export const commentSubmit: HTMLButtonElement = commentForm.querySelector('button[type="submit"]')!;
@@ -33,7 +33,8 @@ export function editFormHandler(e: Event): void {
 	const commentId: string | undefined = parentForm.dataset.commentId;
 	if (!commentId) return;
 
-	updateComment(commentId, processedComment);
+	const updatedComment: Comment | null = updateComment(commentId, processedComment);
+	if (updatedComment) updateCommentContent(updatedComment);
 }
 
 function processComment(commentContent: string): CommentData {

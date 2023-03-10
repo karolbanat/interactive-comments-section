@@ -298,6 +298,17 @@ export function appendComment(comment: Comment): void {
 	commentsList?.appendChild(commentListElement);
 }
 
+export function updateCommentContent(comment: Comment): void {
+	const commentElement: HTMLElement | null = document.querySelector(`[data-id="${comment.id}"]`);
+	if (!commentElement) return;
+
+	const contentContainer: HTMLElement | null = commentElement.querySelector('.comment__content');
+	if (!contentContainer) return;
+
+	clearElement(contentContainer);
+	contentContainer.appendChild(createCommentContent(comment.content, comment.replyingTo));
+}
+
 export function removeCommentFromDOM(id: string): void {
 	const commentToRemove: HTMLElement | null = document.querySelector(`[data-id="${id}"]`);
 	commentToRemove?.closest('li')?.remove();
