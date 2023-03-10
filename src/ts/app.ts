@@ -23,6 +23,38 @@ export function isCurrentUser(username: string): boolean {
 	return username === currentUser.username;
 }
 
+export function upvote(commentId: string): number {
+	const comment: Comment | null = findComment(commentId);
+	if (!comment) return 0;
+
+	if (currentUser.upvoted.includes(commentId)) return comment.score;
+	if (currentUser.downvoted.includes(commentId)) {
+		currentUser.downvoted = currentUser.downvoted.filter(id => id !== commentId);
+		comment.score++;
+	}
+
+	currentUser.upvoted = [...currentUser.upvoted, commentId];
+	comment.score++;
+	saveData({ currentUser, comments });
+	return comment.score;
+}
+
+export function downvote(commentId: string): number {
+	const comment: Comment | null = findComment(commentId);
+	if (!comment) return 0;
+
+	if (currentUser.downvoted.includes(commentId)) return comment.score;
+	if (currentUser.upvoted.includes(commentId)) {
+		currentUser.upvoted = currentUser.upvoted.filter(id => id !== commentId);
+		comment.score--;
+	}
+
+	currentUser.downvoted = [...currentUser.downvoted, commentId];
+	comment.score--;
+	saveData({ currentUser, comments });
+	return comment.score;
+}
+
 /* comments */
 export function addComment(data: CommentData): Comment {
 	const newComment: Comment = createComment(data);

@@ -12,6 +12,8 @@ export interface UserImage {
 export interface User {
 	image: UserImage;
 	username: string;
+	upvoted: string[];
+	downvoted: string[];
 }
 
 export interface Comment {

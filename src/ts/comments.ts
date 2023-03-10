@@ -1,11 +1,20 @@
 import { UserImage, User, Comment } from '../main';
-import { getCurrentUser, getFormattedCommentContent, getFormattedReplyTag, isCurrentUser, removeComment } from './app';
+import {
+	downvote,
+	getCurrentUser,
+	getFormattedCommentContent,
+	getFormattedReplyTag,
+	isCurrentUser,
+	removeComment,
+	upvote,
+} from './app';
 import { editFormHandler, replyFormHandler } from './forms';
 import { openModal } from './modal';
 
 const commentsContainer: HTMLElement = document.querySelector('#comments-container')!;
 
 type Action = 'EDIT' | 'DELETE' | 'REPLY';
+type Vote = 'UPVOTE' | 'DOWNVOTE';
 
 export function populateComments(comments: Comment[]): void {
 	const commentsList: HTMLUListElement = createCommentsList(comments);
@@ -120,22 +129,36 @@ function createScore(score: number): HTMLElement {
 	scoreSpan.innerText = score.toString();
 
 	/* upvote button */
-	scoreContainer.appendChild(createScoreButton('upvote', './images/icon-plus.svg'));
+	scoreContainer.appendChild(createScoreButton('UPVOTE', './images/icon-plus.svg'));
 
 	/* score number */
 	scoreContainer.appendChild(scoreSpan);
 
 	/* downvote button */
-	scoreContainer.appendChild(createScoreButton('downvote', './images/icon-minus.svg'));
+	scoreContainer.appendChild(createScoreButton('DOWNVOTE', './images/icon-minus.svg'));
 
 	return scoreContainer;
 }
 
-function createScoreButton(label: string, iconSource: string): HTMLButtonElement {
+function createScoreButton(vote: Vote, iconSource: string): HTMLButtonElement {
 	const scoreButton: HTMLButtonElement = document.createElement('button');
 	scoreButton.classList.add('score__vote-button');
-	scoreButton.setAttribute('aria-label', label);
+	scoreButton.setAttribute('aria-label', vote.toLowerCase());
 	scoreButton.appendChild(createScoreButtonIcon(iconSource));
+	scoreButton.addEventListener('click', (e: Event) => {
+		const button: HTMLButtonElement = e.target as HTMLButtonElement;
+		const comment: HTMLElement | null = button.closest('.comment');
+		if (!comment || Boolean(comment.dataset.currentUser)) return;
+
+		const scoreContainer: HTMLElement | null = button.closest('.score');
+		if (!scoreContainer) return;
+
+		const scoreSpan: HTMLSpanElement | null = scoreContainer.querySelector('span');
+		if (!scoreSpan) return;
+
+		const newScore: number = vote === 'UPVOTE' ? upvote(comment.dataset.id!) : downvote(comment.dataset.id!);
+		scoreSpan.innerText = newScore.toString();
+	});
 	return scoreButton;
 }
 
