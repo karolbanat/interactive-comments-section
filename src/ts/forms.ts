@@ -1,29 +1,22 @@
-import { Comment, CommentData } from '../main';
-import { v4 as uuidv4 } from 'uuid';
-import { addComment, getCurrentUser, updateComment } from './app';
+import { CommentData, Comment } from '../main';
+import { addComment, updateComment } from './app';
+import { appendComment } from './comments';
 
 const commentForm: HTMLFormElement = document.querySelector('#global-comment-form')!;
-const commentInput: HTMLTextAreaElement = commentForm.querySelector('textarea#comment')!;
 export const commentSubmit: HTMLButtonElement = commentForm.querySelector('button[type="submit"]')!;
 
 export function handleCommentAdd(e: Event): void {
 	e.preventDefault();
 
-	const commentContent: string = commentInput.value;
-	const { content, replyingTo }: CommentData = processComment(commentContent);
+	const button: HTMLButtonElement = e.target as HTMLButtonElement;
+	const parentForm: HTMLFormElement = button.closest('form')!;
+	const commentField: HTMLTextAreaElement = parentForm.querySelector('textarea')!;
 
-	if (isBlank(content)) return;
-	const newComment: Comment = {
-		id: uuidv4(),
-		content,
-		createdAt: 'few seconds ago',
-		replies: [],
-		score: 0,
-		user: getCurrentUser(),
-	};
-	if (replyingTo) newComment.replyingTo = replyingTo;
+	const processedComment: CommentData = processComment(commentField.value);
+	if (isBlank(processedComment.content)) return;
 
-	addComment(newComment);
+	const comment: Comment = addComment(processedComment);
+	appendComment(comment);
 }
 
 export function editFormHandler(e: Event): void {

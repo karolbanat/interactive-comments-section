@@ -9,47 +9,38 @@ type Action = 'EDIT' | 'DELETE' | 'REPLY';
 
 export function populateComments(comments: Comment[]): void {
 	const commentsList: HTMLUListElement = createCommentsList(comments);
+	commentsList.id = 'comments-list';
 	commentsContainer.appendChild(commentsList);
 }
 
-export function createCommentsList(comments: Comment[], dataId: string = 'global'): HTMLUListElement {
+export function createCommentsList(comments: Comment[], asReplies: boolean = false): HTMLUListElement {
 	const commentsList: HTMLUListElement = document.createElement('ul');
 	commentsList.classList.add('comments-grid');
-	commentsList.dataset.id = `comments-list-${dataId}`;
 
-	for (const comment of comments) commentsList.appendChild(createCommentsListElement(comment));
+	for (const comment of comments) commentsList.appendChild(createCommentsListElement(comment, asReplies));
 
 	return commentsList;
 }
 
-function createCommentsListElement(comment: Comment): HTMLLIElement {
+function createCommentsListElement(comment: Comment, isReply: boolean = false): HTMLLIElement {
 	const li: HTMLLIElement = document.createElement('li');
 	li.classList.add('comments-grid');
-	li.appendChild(createComment(comment, isCurrentUser(comment.user.username)));
+	li.appendChild(createComment(comment, isCurrentUser(comment.user.username), isReply));
 
 	if (comment.replies && comment.replies.length > 0) {
 		li.classList.add('comments-grid');
-		li.appendChild(createCommentsList(comment.replies, comment.id));
+		li.appendChild(createCommentsList(comment.replies, true));
 	}
 
 	return li;
 }
 
-export function appendComment(comment: Comment, listDataId: string = 'global'): HTMLElement {
-	const commentsList: HTMLUListElement = document.querySelector(
-		`[data-id="comments-list-${listDataId}"]`
-	) as HTMLUListElement;
-	const commentElement: HTMLElement = createCommentsListElement(comment);
-
-	if (commentsList) commentsList.appendChild(commentElement);
-	return commentElement;
-}
-
-export function createComment(comment: Comment, isCurrentUser: boolean = false): HTMLElement {
+export function createComment(comment: Comment, isCurrentUser: boolean = false, isReply: boolean = false): HTMLElement {
 	const commentElement: HTMLElement = document.createElement('div');
 	commentElement.classList.add('comment');
 	commentElement.dataset.id = comment.id.toString();
-	if (isCurrentUser) commentElement.setAttribute('data-current-user', 'true');
+	commentElement.dataset.reply = isReply.toString();
+	if (isCurrentUser) commentElement.dataset.currentUser = 'true';
 
 	commentElement.appendChild(createCommentHeader(comment.user, comment.createdAt));
 	commentElement.appendChild(createCommentContent(comment.content, comment.replyingTo));
@@ -200,7 +191,10 @@ function deleteHandler(e: Event): void {
 	if (!comment) return;
 
 	const id: string = comment.dataset.id!;
-	openModal(() => removeComment(id));
+	openModal(() => {
+		removeComment(id);
+		removeCommentFromDOM(id);
+	});
 }
 
 function editHandler(e: Event): void {
@@ -298,10 +292,13 @@ function createSubmitButton(label: string = 'Send'): HTMLButtonElement {
 	return submitBtn;
 }
 
-/* removing */
+export function appendComment(comment: Comment): void {
+	const commentListElement: HTMLLIElement = createCommentsListElement(comment);
+	const commentsList: HTMLUListElement | null = document.querySelector('#comments-list');
+	commentsList?.appendChild(commentListElement);
+}
+
 export function removeCommentFromDOM(id: string): void {
 	const commentToRemove: HTMLElement | null = document.querySelector(`[data-id="${id}"]`);
-	if (!commentToRemove) return;
-
-	commentToRemove.closest('li')!.remove();
+	commentToRemove?.closest('li')?.remove();
 }

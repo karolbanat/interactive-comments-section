@@ -1,6 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
 import { User, Comment, CommentData } from '../main';
-import { appendComment, insertCommentContent, removeCommentFromDOM } from './comments';
 import { loadData, saveData } from './dataLoading';
 import { populateComments } from './comments';
 
